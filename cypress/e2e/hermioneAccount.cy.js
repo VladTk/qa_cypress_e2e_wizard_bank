@@ -3,8 +3,10 @@
 import { faker } from '@faker-js/faker';
 
 describe('Bank app', () => {
-  const depositAmount = `${faker.number.int({ min: 500, max: 10000 })}`;
-  const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
+  const depositAmount = faker.number.int({ min: 500, max: 10000 });
+  const withdrawAmount = faker.number.int({ min: 50, max: 500 });
+  const depositAmountStr = depositAmount.toString();
+  const withdrawAmountStr = withdrawAmount.toString();
   const user = 'Hermoine Granger';
   const accountNumber = '1001';
   const secondAccountNumber = '1002';
@@ -39,7 +41,7 @@ describe('Bank app', () => {
 
     cy.get('[ng-class="btnClass2"]').click();
     cy.contains('[type="submit"]', 'Deposit').should('be.visible');
-    cy.get('[placeholder="amount"]').type(depositAmount);
+    cy.get('[placeholder="amount"]').type(depositAmountStr);
     cy.get('[type="submit"]').click();
 
     cy.contains('[ng-show="message"]', 'Deposit Successful').should(
@@ -47,12 +49,12 @@ describe('Bank app', () => {
     );
 
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', balance + +depositAmount)
+      .contains('strong', balance + depositAmount)
       .should('be.visible');
 
     cy.get('[ng-class="btnClass3"]').click();
     cy.contains('[type="submit"]', 'Withdraw').should('be.visible');
-    cy.get('[placeholder="amount"]').type(withdrawAmount);
+    cy.get('[placeholder="amount"]').type(withdrawAmountStr);
     cy.get('[type="submit"]').click();
 
     cy.contains('[ng-show="message"]', 'Transaction successful').should(
@@ -60,7 +62,7 @@ describe('Bank app', () => {
     );
 
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', balance + +depositAmount - +withdrawAmount)
+      .contains('strong', balance + depositAmount - withdrawAmount)
       .should('be.visible');
 
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -74,8 +76,8 @@ describe('Bank app', () => {
 
     cy.get('table').should('be.visible');
 
-    cy.get('table tr').should('contain', depositAmount);
-    cy.get('table tr').should('contain', withdrawAmount);
+    cy.get('table tr').should('contain', depositAmountStr);
+    cy.get('table tr').should('contain', withdrawAmountStr);
 
     cy.contains('.btn', 'Back').click();
 
@@ -83,8 +85,8 @@ describe('Bank app', () => {
 
     cy.get('[ng-class="btnClass1"]').click();
 
-    cy.get('table tr').should('not.contain', depositAmount);
-    cy.get('table tr').should('not.contain', withdrawAmount);
+    cy.get('table tr').should('not.contain', depositAmountStr);
+    cy.get('table tr').should('not.contain', withdrawAmountStr);
 
     cy.get('[ng-show="logout"]').click();
 
